@@ -1,0 +1,46 @@
+---
+title: "False_Bay_monitoring_tides"
+author: "Wendel Raymond"
+date: "April 5, 2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+## False Bay Monitoring Tides
+Extract and view tides critical for the water quality monitoring project. 
+
+```{r}
+library(tidyverse)
+library(rtide)
+```
+
+
+### Get tide data
+From April to September 2021
+```{r}
+## Data extract ##
+dat <- rtide::tide_height("Port Townsend", from = as.Date("2021-04-01"), to = as.Date("2021-09-01"), minutes = 10L, tz = "PST8PDT")
+
+## add feet column ##
+dat$TideHeight_ft <- dat$TideHeight * 3.281
+
+## Clean up date data ##
+dat$DateTime <- as.POSIXlt(dat$DateTime, format = "%Y-%m-%d %h:%m:%s", tz = "PST8PDT")
+```
+
+Quick plot
+```{r}
+ggplot(data = dat, aes(x = DateTime, y = TideHeight_ft)) +
+  geom_line()
+```
+
+### Filter tide data
+
+Filter for all data when height is <= 4 feet. 
+```{r}
+dat.redu <- dat %>%
+  filter(TideHeight_ft <= 4)
+
+
+```
+
