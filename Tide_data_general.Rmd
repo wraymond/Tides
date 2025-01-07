@@ -1,0 +1,46 @@
+---
+title: "Tide_data_general"
+author: "Wendel Raymond"
+date: "`r Sys.Date()`"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+## Extract tide data
+Generalized script to extract tide prediction data for a given site, date range, and interval. 
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(rtide)
+library(scales)
+```
+
+### Settings
+Create objects for common options in tide_height function. Use tide_stations() to see options. 10 minute intervals are useful for smooth curves.
+```{r}
+site <- "Port Townsend"
+start_date <- as.Date("2025-01-01")
+end_date <- as.Date("2025-01-31")
+int <- 10L
+zone <- "PST8PDT"
+```
+
+### Extract
+
+Port Townsend for calendar year 2025
+```{r}
+pt.2025 <- rtide::tide_height(site, from = start_date, to = end_date, minutes = int, tz = zone, harmonics = rtide::harmonics)
+
+test <- tide_height_data(pt.2025[, 1:2], harmonics = rtide::harmonics)
+```
+
+
+```{r}
+ggplot(pt.2025) +
+  geom_line(aes(x = DateTime, y = TideHeight)) +
+  theme_classic()
+```
+
