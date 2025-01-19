@@ -44,3 +44,20 @@ ggplot(pt.2025) +
   theme_classic()
 ```
 
+## Re formate NOAA query
+```{r}
+tide <- read.csv("CO-OPS__9444900__pr.csv", header = TRUE)
+```
+
+```{r}
+tide$Date.Time <- as.POSIXct(tide$Date.Time, format = "%Y-%m-%d %H:%M")
+tide$Date <- as.Date(tide$Date.Time)
+tide$Time <- format(tide$Date.Time, format = "%H:%M")
+```
+
+```{r}
+tide.redu <- tide %>% 
+  group_by(Date) %>% 
+  
+```
+
